@@ -2,16 +2,17 @@
 #include <SoftwareSerial.h>
 #include <Arduino.h>
 
-Controller cpu;
-
+Controller cpu; //Instantiate the controller class
 
 void setup()
 {
+	//Begin the serial output
 	Serial.begin(9600);
 }
 
 void loop()
 {
+	//Get the initial command for this instruction 
 	int command = cpu.sensor.getInt();
 	/**
 		1 = storeInt -> location -> value*
@@ -41,7 +42,7 @@ void loop()
 		music -> notes* //maybe
 		* = goUntilBreak (63 (0b111111))
 	**/
-	switch(command)
+	switch(command) //Switch the mode based on the first value
 	{
 		case 1:
 			cpu.storeInt();
@@ -115,9 +116,7 @@ void loop()
 		case 24:
 			cpu.jumpIfNotEqual();
 		case 63:
-			// break everything!
+			// Do nothing
 		    break;
 	}
-
-
 }
