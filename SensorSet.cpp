@@ -1,14 +1,13 @@
 #include "Arduino.h"
 #include "SensorSet.h"
 
-const int THRES[] = { 800, 760, 760, 760, 760, 800 }; //The unique black/white threshold for each sensor (0 - 5)
-
+//The unique black/white threshold for each sensor (0 - 5)
+const int THRES[] = { 800, 760, 760, 760, 760, 800 }; 
 
 // Create an instance of the SensorSet with the given pin values
 SensorSet::SensorSet(int _pin1, int _pin2, int _pin3, int _pin4, int _pin5, int _pin6, int _commitPin)
 {
-//	lower[] = {'\0', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', "'o", 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ' ', '\t', '\n', '`', '[', ']', ';', "'", '', '.', '/', '-', '='};
-//	upper[] = {'\0', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', ')', '!', '@', '#', '$', '%', '^', '&', '*', '(', ' ', '\t', '\n', '|', '{', '}', ':', '"', '', '>', '?', '_', "+'"};
+	// Save the pin values
 	commitPin = _commitPin;
 	pins[0] = _pin1;
 	pins[1] = _pin2;
@@ -16,6 +15,8 @@ SensorSet::SensorSet(int _pin1, int _pin2, int _pin3, int _pin4, int _pin5, int 
 	pins[3] = _pin4;
 	pins[4] = _pin5;
 	pins[5] = _pin6;
+	
+	//Set the pin mode for each pin
 	for (int i = 0; i < 6; i++)
 	{
 		pinMode(pins[i], INPUT_PULLUP);
@@ -30,6 +31,7 @@ bool SensorSet::isBlack(int i)
 	return (digitalRead(pin) == LOW);
 }
 
+// Returns if all of the sensors (buttons) white 
 bool SensorSet::allWhite()
 {
 	for (int i = 0; i < 6; i++)
@@ -45,23 +47,26 @@ bool SensorSet::allWhite()
 //Return the integer representation of the binary value read from all 6 sensors
 int SensorSet::getInt()
 {
-	bool val[6] = {0,0,0,0,0,0};
+	bool val[6] = {0, 0, 0, 0, 0, 0};
 	while (digitalRead(commitPin) != LOW) // While the button has not been pressed
 	{
-		for (int i = 0; i < 6; i ++)
+		for (int i = 0; i < 6; i ++) //Check all the buttons and see if they've been pressed
 		{
-			if (isBlack(i))
+			if (isBlack(i)) //If it is pressed, save that bit
 			{
 				val[i] = true;
 			}
 		}
 	}
-	delay(250);
-	int intVal = bitShift(val);
-	Serial.println(intVal);
-	return intVal;
+	delay(250); //Wait for 1/4 second to debounce the commit button
+	int intVal = bitShift(val); //Convert the bool array to decimal value
+	Serial.print("[")
+	Serial.print(intVal);
+	Serial.println("]");
+	return intVal; 
 }
 
+// Converts a bool array representing the sensor values to an integer using bitwise operations 
 int SensorSet::bitShift(bool val[])
 {
 	int x = 0;
@@ -121,7 +126,7 @@ bool* SensorSet::getRaw()
 }
 
 
-//Get the associated char with the current value
+//Get the associated char with the current value, depending on the case 
 String SensorSet::getChar(int num, int shift)
 {
 	shift = !shift;
