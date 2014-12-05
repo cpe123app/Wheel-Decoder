@@ -1,9 +1,7 @@
 Wheel Decoder
 =============
 
-**Commit and push often so we can all see and discuss changes/progress and help. Thanks**
-
-I really hope someone was trying to make progress this weekend, because I've just been slowly doing barely anything -Max
+**Max Zinkus, Jackson Darrow, Eric Burlingame, and Kyle Rosenthal**
 
 * Read from 6 IR Sensors
 
