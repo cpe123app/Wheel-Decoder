@@ -5,10 +5,10 @@
 class Controller 
 {
     private:
-        int intMem[32];
-        String strMem[16];
-        int pinOne;
-        int pinTwo;
+        int intMem[32]; // RAM for integers
+        String strMem[16]; // RAM for strings
+        int pinOne; // an open pin for arbitrary hardware
+        int pinTwo; // another open pin for arbitrary hardware
         SoftwareSerial BTSerial;
     public:
         Controller();
